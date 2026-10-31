@@ -1,0 +1,323 @@
+{
+  "info": {
+    "name": "Proyecto Módulo 4 - Gestión de Productos",
+    "description": "Ejecutar en orden con la API arrancada. Los scripts son comprobaciones propias de Postman; la aplicación está escrita en archivos .java.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "genericoId",
+      "value": ""
+    },
+    {
+      "key": "electronicoId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Crear genérico",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Cuaderno\",\n  \"precio\": 3.5,\n  \"cantidad\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) pm.collectionVariables.set(\"genericoId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Crear electrónico",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Portátil\",\n  \"precio\": 799.99,\n  \"cantidad\": 5,\n  \"tipo\": \"ELECTRONICO\",\n  \"marca\": \"Lenovo\",\n  \"modelo\": \"IdeaPad\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) pm.collectionVariables.set(\"electronicoId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Listar productos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Buscar por nombre",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos?nombre=PORT"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Obtener por id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos/{{electronicoId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Mayor cantidad",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos/mayor-stock"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Actualizar electrónico",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos/{{electronicoId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Portátil\",\n  \"precio\": 749.99,\n  \"cantidad\": 8,\n  \"tipo\": \"ELECTRONICO\",\n  \"marca\": \"Lenovo\",\n  \"modelo\": \"IdeaPad\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Rechazar precio negativo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Cuaderno\",\n  \"precio\": -1,\n  \"cantidad\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Rechazar cambio de tipo",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos/{{electronicoId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Cuaderno\",\n  \"precio\": 3.5,\n  \"cantidad\": 25,\n  \"tipo\": \"GENERICO\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", function () { pm.response.to.have.status(409); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Eliminar genérico",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/productos/{{genericoId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 Consultar eliminado",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos/{{genericoId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 Eliminar electrónico",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/productos/{{electronicoId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
